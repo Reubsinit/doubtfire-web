@@ -79,6 +79,11 @@
               Name <i ng-show="tableSort.order == 'name'" class="fa fa-caret-{{tableSort.reverse ? 'down' : 'up'}}"></i>
             </a>
           </th><!--/name-column-header-->
+          <th class="student-id">
+            <a ng-click="sortTableBy('name')">
+              Campus
+            </a>
+          </th><!--/campus-column-header-->
           <th class="stats">
             <a ng-click="sortTableBy('orderScale')">
               Stats <i ng-show="tableSort.order == 'orderScale'" class="fa fa-caret-{{tableSort.reverse ? 'down' : 'up'}}"></i>
@@ -112,6 +117,9 @@
           <td ng-click="viewStudent(student)">
             {{student.name}}
           </td><!--/name-column-->
+          <td ng-click="viewStudent(student)">
+            A campus
+          </td><!--/campus-column-->
           <td ng-click="viewStudent(student)" class="task-progress-bar">
             <progress class="task-progress" animate="true">
               <bar
