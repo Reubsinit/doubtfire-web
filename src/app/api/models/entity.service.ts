@@ -144,7 +144,7 @@ export abstract class EntityService<T extends Entity>  {
   public create(pathIds?: Object, options?: HttpOptions): Observable<T>;
   public create(pathIds?: any, options?: HttpOptions): Observable<T> {
     let object = { ...pathIds };
-    const json = (typeof pathIds === 'object') ? pathIds.toJson() : pathIds;
+    const json = (typeof pathIds.toJson === 'function') ? pathIds.toJson() : pathIds;
     const path = this.buildEndpoint(this.endpointFormat, object);
     return this.httpClient.post(path, json, options)
       .pipe(
