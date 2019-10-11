@@ -1,10 +1,15 @@
-import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
-import { currentUser, alertService } from 'src/app/ajs-upgraded-providers';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { alertService } from 'src/app/ajs-upgraded-providers';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { CampusService } from 'src/app/api/models/campus/campus.service';
 import { Campus } from 'src/app/api/models/campus/campus';
+
+interface FormChanges {
+  changed: boolean;
+  changes: {};
+}
 
 @Component({
   selector: 'campus-list',
@@ -25,17 +30,12 @@ export class CampusListComponent implements OnInit {
       Validators.required
     ]),
     mode: new FormControl('', [
-      Validators.required,
-      Validators.pattern(
-        this.syncModes.map(mode => {
-          return `\b${mode}|`;
-        }).toString()
-      )
+      Validators.required
     ])
   });
 
   // Set up the table
-  columns: string[] = ['abbreviation', 'name', 'mode', 'options'];
+  columns: string[] = ['name', 'abbreviation', 'mode', 'options'];
   campuses: Campus[] = new Array<Campus>();
   dataSource = new MatTableDataSource(this.campuses);
   selectedCampus: Campus;
@@ -54,21 +54,29 @@ export class CampusListComponent implements OnInit {
     });
   }
 
-  private campusChanged(campus: Campus) {
-    return campus.name !== this.campusForm.get('name').value ||
-      campus.abbreviation !== this.campusForm.get('abbreviation').value ||
-      campus.mode !== this.campusForm.get('mode').value;
+  private campusChanges(campus): FormChanges {
+    let result = { changed: false, changes: {} } as FormChanges;
+    for (let key in campus) {
+      if (key === 'id') { continue; }
+      if (Object.prototype.hasOwnProperty.call(campus, key)) {
+        if (campus[key] !== this.campusForm.get(`${key}`).value) {
+          // this.campusForm[`${key}.orig`] = campus[key];
+          result.changes[key] = this.campusForm.get(`${key}`).value;
+        }
+      }
+    }
+    if (Object.entries(result.changes).length !== 0) {
+      result.changed = true;
+    }
+    return result;
   }
 
-  private assignUpdatedValues(campus: Campus) {
-    if (campus.name !== this.campusForm.get('name').value) {
-      campus.name = this.campusForm.get('name').value;
-    }
-    if (campus.abbreviation !== this.campusForm.get('abbreviation').value) {
-      campus.abbreviation = this.campusForm.get('abbreviation').value;
-    }
-    if (campus.mode !== this.campusForm.get('mode').value) {
-      campus.mode = this.campusForm.get('mode').value;
+  private assignUpdatedValues(changes, campus) {
+    for (let key in changes) {
+      if (Object.prototype.hasOwnProperty.call(changes, key)) {
+        // this.campusForm[`${key}.orig`] = campus[key];
+        campus[key] = changes[key];
+      }
     }
   }
 
@@ -81,8 +89,10 @@ export class CampusListComponent implements OnInit {
 
   update(campus: Campus) {
     if (this.campusForm.valid) {
-      if (this.campusChanged(campus)) {
-        this.assignUpdatedValues(campus);
+      debugger;
+      const changes = this.campusChanges(campus);
+      if (changes.changed) {
+        this.assignUpdatedValues(changes.changes, campus);
         this.campusService.update(campus).subscribe(
           () => {
             this.alertService.add('success', 'Campus edited', 2000);
@@ -101,8 +111,10 @@ export class CampusListComponent implements OnInit {
   }
 
   delete(campus: Campus) {
-    this.campusService.delete(campus).subscribe();
-    this.selectedCampus = null;
+    this.campusService.delete(campus).subscribe(
+      () => this.selectedCampus = null,
+      error => this.alertService.add('danger', error, 6000));
+
   }
 
   saveNew() {
@@ -141,8 +153,13 @@ export class CampusListComponent implements OnInit {
   flagEdit(item) {
     this.selectedCampus = item;
     this.clearFormControls();
-    this.campusForm.get('name').setValue(item.name);
-    this.campusForm.get('abbreviation').setValue(item.abbreviation);
-    this.campusForm.get('mode').setValue(item.mode);
+    this.campusForm.patchValue({
+      name: item.name,
+      abbreviation: item.abbreviation,
+      mode: item.mode
+    });
+    // this.campusForm.get('name').setValue(item.name);
+    // this.campusForm.get('abbreviation').setValue(item.abbreviation);
+    // this.campusForm.get('mode').setValue(item.mode);
   }
 }
