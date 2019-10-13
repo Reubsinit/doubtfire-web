@@ -23,6 +23,8 @@ export interface HttpOptions {
  */
 export abstract class EntityService<T extends Entity>  {
 
+  abstract entityName: string;
+
   /**
    * Provide a string template for the endpoint URLs in the format
    * 'path/to/:id1:/other/:id2:' where ':id1:' and ':id2:' are placeholders for id values
