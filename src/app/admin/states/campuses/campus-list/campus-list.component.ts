@@ -5,7 +5,7 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { CampusService } from 'src/app/api/models/campus/campus.service';
 import { Campus } from 'src/app/api/models/campus/campus';
-import { EntityFormComponent } from 'src/app/common/form/base-form/base-form.component';
+import { EntityFormComponent } from 'src/app/common/entity-form/entity-form.component';
 
 @Component({
   selector: 'campus-list',
