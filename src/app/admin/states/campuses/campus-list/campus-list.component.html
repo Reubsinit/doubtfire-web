@@ -16,7 +16,7 @@
         </div>
         <ng-template #edit>
           <mat-form-field class="data-entry">
-            <input matInput required formControlName="name">
+            <input matInput required formControlName="name" placeholder="Name">
           </mat-form-field>
         </ng-template>
       </td>
@@ -36,7 +36,7 @@
         </div>
         <ng-template #edit>
           <mat-form-field class="data-entry">
-            <input matInput required formControlName="abbreviation">
+            <input matInput required formControlName="abbreviation" placeholder="Abbreviation">
           </mat-form-field>
         </ng-template>
       </td>
@@ -56,6 +56,7 @@
         </div>
         <ng-template #edit>
           <mat-form-field class="data-entry">
+            <mat-label>Default Sync Mode</mat-label>
             <mat-select required formControlName="mode">
               <mat-option *ngFor="let mode of syncModes" [value]="mode">
                 {{mode | titlecase }}
@@ -89,10 +90,6 @@
               <mat-icon color="primary">edit</mat-icon>
               <span>Edit</span>
             </button>
-            <!-- <button mat-menu-item (click)="delete(campus)">
-              <mat-icon color="warn">delete</mat-icon>
-              <span>Delete</span>
-            </button> -->
           </mat-menu>
         </div>
         <ng-template #edit>
@@ -119,6 +116,6 @@
 
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-    <tr [hidden]="flaggedForEdit" mat-footer-row *matFooterRowDef="columns"></tr>
+    <tr [hidden]="selected" mat-footer-row *matFooterRowDef="columns"></tr>
   </table>
 </div>

@@ -7,11 +7,6 @@ import { CampusService } from 'src/app/api/models/campus/campus.service';
 import { Campus } from 'src/app/api/models/campus/campus';
 import { EntityFormComponent } from 'src/app/common/form/base-form/base-form.component';
 
-interface FormChanges {
-  changed: boolean;
-  changes: {};
-}
-
 @Component({
   selector: 'campus-list',
   templateUrl: 'campus-list.component.html',
@@ -48,25 +43,23 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
 
   ngOnInit() {
     this.campusService.query().subscribe((campuses) => {
-      this.campuses.push(...campuses);
-      this.table.renderRows();
+      this.pushToTable(campuses);
     });
-  }
-
-  delete(campus: Campus) {
-    this.campusService.delete(campus).subscribe(
-      () => this.flaggedForEdit = null,
-      error => this.alertService.add('danger', error, 6000));
   }
 
   onSuccess(response: Campus, isNew: boolean) {
     if (isNew) {
-      this.campuses.push(response);
-      this.table.renderRows();
+      this.pushToTable(response);
     }
   }
 
+  private pushToTable(value: Campus | Campus[]) {
+    value instanceof Array ? this.campuses.push(...value) : this.campuses.push(value);
+    this.dataSource.sort = this.sort;
+    this.table.renderRows();
+  }
+
   submit() {
-    super.submit(this.campusService, this.alertService, 'Campus', this.onSuccess.bind(this));
+    super.submit(this.campusService, this.alertService, this.onSuccess.bind(this));
   }
 }
