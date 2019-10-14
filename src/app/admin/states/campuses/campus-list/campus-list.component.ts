@@ -23,10 +23,11 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
   campuses: Campus[] = new Array<Campus>();
   dataSource = new MatTableDataSource(this.campuses);
 
+  // Calls the parent's constructor, passing in an object
+  // that maps all of the form controls that this form consists of.
   constructor(
     private campusService: CampusService,
-    // tslint:disable-next-line: no-shadowed-variable
-    @Inject(alertService) private alertService: any
+    @Inject(alertService) private alerts: any
   ) {
     super({
       abbreviation: new FormControl('', [
@@ -42,24 +43,31 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
   }
 
   ngOnInit() {
+    // Get all the campuses and add them to the table
     this.campusService.query().subscribe((campuses) => {
       this.pushToTable(campuses);
     });
   }
 
+  // This method is passed to the submit method on the parent
+  // and is only run when an entity is successfully created or updated
   onSuccess(response: Campus, isNew: boolean) {
     if (isNew) {
       this.pushToTable(response);
     }
   }
 
+  // Push the values that will be displayed in the table
+  // to the datasource
   private pushToTable(value: Campus | Campus[]) {
     value instanceof Array ? this.campuses.push(...value) : this.campuses.push(value);
     this.dataSource.sort = this.sort;
     this.table.renderRows();
   }
 
+  // This method is called when the form is submitted,
+  // which then calls the parent's submit.
   submit() {
-    super.submit(this.campusService, this.alertService, this.onSuccess.bind(this));
+    super.submit(this.campusService, this.alerts, this.onSuccess.bind(this));
   }
 }
