@@ -92,7 +92,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    * @param alertService the alert service used to provide alerts.
    * @param success the function, provided by inheritor, that is executed on success of CRUD methods.
    */
-  submit(service: EntityService<T>, alertService: any, success: OnSuccessMethod<T>) {
+  submit(service: EntityService<T>, alertService: any, success: OnSuccessMethod<T>, associations?: Object) {
     // response is what we get back from the server
     // when creating or updating
     let response: Observable<T>;
@@ -113,7 +113,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
         this.copyChangesFromForm();
         response = service.update(this.selected);
       } else if (!this.selected) { // Nothing selected, which means we're creating something new
-        response = service.create({ campus: this.formDataToObject() });
+        response = service.create(this.formDataToObject(service.entityName.toLocaleLowerCase(), associations));
       } else { // Nothing has changed if the selected value, so we want to inform the user
         alertService.add('danger', `${service.entityName} was not changed`, 6000);
         return;
@@ -140,7 +140,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
           if (this.selected && this.hasChanges()) {
             this.restoreFromBackup();
           }
-          alertService.add('danger', `${service.entityName}} save failed: ${error}`, 6000);
+          alertService.add('danger', `${service.entityName} save failed: ${error}`, 6000);
         }
       );
     } else {
@@ -201,10 +201,16 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    *
    * @returns object representation of form data.
    */
-  formDataToObject(): Object {
+  formDataToObject(entityName: string, associations?: Object): Object {
     let result = {};
+    result[entityName] = {};
     for (const key of Object.keys(this.formData.controls)) {
-      result[key] = this.formData.get(`${key}`).value;
+      result[entityName][key] = this.formData.get(`${key}`).value;
+    }
+    if (associations) {
+      for (const key of Object.keys(associations)) {
+        result[entityName][key] = associations[key];
+      }
     }
     return result;
   }
