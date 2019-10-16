@@ -1,7 +1,7 @@
 import { EntityService, HttpOptions } from './entity.service';
 import { Entity } from './entity';
 import { Observable } from 'rxjs';
-import { tap, finalize, map } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 export abstract class CacheableEntityService<T extends Entity> extends EntityService<T> {
   private cache: Map<string, T> = new Map<string, T>();
@@ -59,7 +59,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
     }
     return super.get(pathIds, options).pipe(
       map((entity: T) => {
-        if (this.cache.has(key)) {
+        if (this.hasEntityInCache(key)) {
           let cachedEntity = this.cache.get(key);
           Object.assign(cachedEntity, entity);
           return cachedEntity;
@@ -71,16 +71,34 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
     );
   }
 
+  /**
+   * Checks if an entity exists for a given key within the current cache.
+   *
+   * @param key Key of entity to check for.
+   * @returns true if the entity with key is in the cache
+   */
+  public hasEntityInCache(key: string): boolean {
+    return this.cache.has(key);
+  }
 
   /**
- * First, tries to retrieve from cache, the object with the id, or id field from the pathIds.
- * If found, return the item from cache, otherwise make a get request to the end point,
- * using the supplied parameters to determine path. Caches the returned object
- *
- * @param pathIds Either the id, if a number and maps simple to ':id', otherwise an object
- *                with keys the match the placeholders within the endpointFormat string.
- * @param options Optional http options
- */
+   * Read a given entity from the cache without interaction with the server.
+   *
+   * @param key key of entity to read from cache
+   */
+  public getFromCache(key: string): T {
+    return this.cache.get(key);
+  }
+
+  /**
+  * First, tries to retrieve from cache, the object with the id, or id field from the pathIds.
+  * If found, return the item from cache, otherwise make a get request to the end point,
+  * using the supplied parameters to determine path. Caches the returned object
+  *
+  * @param pathIds Either the id, if a number and maps simple to ':id', otherwise an object
+  *                with keys the match the placeholders within the endpointFormat string.
+  * @param options Optional http options
+  */
   public get(pathIds: number, options?: HttpOptions): Observable<T>;
   public get(pathIds: string, options?: HttpOptions): Observable<T>;
   public get(pathIds: object, options?: HttpOptions): Observable<T>;
@@ -94,7 +112,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
       key = pathIds;
     }
     if (this.cache.has(key)) {
-      return Observable.create((observer: any) => observer.next(this.cache.get(key)));
+      return Observable.create((observer: any) => observer.next(this.getFromCache(key)));
     } else {
       return super.get(pathIds, options).pipe(
         tap((entity: T) => this.cache.set(entity.key, entity))
