@@ -19,7 +19,7 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
   syncModes = ['timetable', 'automatic', 'manual'];
 
   // Set up the table
-  columns: string[] = ['name', 'abbreviation', 'mode', 'options'];
+  columns: string[] = ['name', 'abbreviation', 'mode', 'active', 'options'];
   campuses: Campus[] = new Array<Campus>();
   dataSource = new MatTableDataSource(this.campuses);
 
@@ -38,7 +38,8 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
       ]),
       mode: new FormControl('', [
         Validators.required
-      ])
+      ]),
+      active: new FormControl('')
     });
   }
 
