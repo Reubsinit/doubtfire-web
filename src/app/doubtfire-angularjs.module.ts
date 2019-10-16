@@ -282,6 +282,7 @@ import { CampusListComponent } from './admin/states/campuses/campus-list/campus-
 import { UnitTutorialsListComponent } from './units/states/edit/directives/unit-tutorials-list/unit-tutorials-list.component';
 import { ActivityListComponent } from './admin/states/activities/activity-list/activity-list.component';
 import { InstitutionSettingsComponent } from './units/states/institution-settings/institution-settings.component';
+import { TutorialService } from './api/models/tutorial/tutorial.service';
 
 export const DoubtfireAngularJSModule = angular.module('doubtfire', [
   'doubtfire.config',
@@ -309,6 +310,8 @@ DoubtfireAngularJSModule.factory('DoubtfireConstants',
   downgradeInjectable(DoubtfireConstants));
 DoubtfireAngularJSModule.factory('ExtensionModal',
   downgradeInjectable(ExtensionModalService));
+DoubtfireAngularJSModule.factory('tutorialService',
+  downgradeInjectable(TutorialService));
 
 // directive -> component
 DoubtfireAngularJSModule.directive('taskCommentComposer',
