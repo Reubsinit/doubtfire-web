@@ -89,10 +89,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { UnitTutorialsListComponent } from './units/states/edit/directives/unit-tutorials-list/unit-tutorials-list.component';
-import { ActivityListComponent } from './admin/states/activities/activity-list/activity-list.component';
+import { ActivityTypeListComponent } from './admin/states/activity-types/activity-type-list/activity-type-list.component';
 import { InstitutionSettingsComponent } from './units/states/institution-settings/institution-settings.component';
 import { CampusService } from './api/models/campus/campus.service';
 import { TutorialService } from './api/models/tutorial/tutorial.service';
+import { ActivityTypeService } from './api/models/activity-type/activity-type.service';
 
 @NgModule({
   // components
@@ -111,7 +112,7 @@ import { TutorialService } from './api/models/tutorial/tutorial.service';
     IntelligentDiscussionRecorderComponent,
     ExtensionCommentComponent,
     CampusListComponent,
-    ActivityListComponent,
+    ActivityTypeListComponent,
     ExtensionModalComponent,
     UserIconComponent,
     InstitutionSettingsComponent
@@ -155,6 +156,7 @@ import { TutorialService } from './api/models/tutorial/tutorial.service';
   providers: [
     UserService,
     CampusService,
+    ActivityTypeService,
     TutorialService,
     userProvider,
     unitProvider,

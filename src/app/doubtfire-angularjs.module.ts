@@ -280,7 +280,7 @@ import { UserIconComponent } from './common/user-icon/user-icon.component';
 import { UserSettingsDialog } from './admin/modals/user-settings-modal/user-settings-dialog.component';
 import { CampusListComponent } from './admin/states/campuses/campus-list/campus-list.component';
 import { UnitTutorialsListComponent } from './units/states/edit/directives/unit-tutorials-list/unit-tutorials-list.component';
-import { ActivityListComponent } from './admin/states/activities/activity-list/activity-list.component';
+import { ActivityTypeListComponent } from './admin/states/activity-types/activity-type-list/activity-type-list.component';
 import { InstitutionSettingsComponent } from './units/states/institution-settings/institution-settings.component';
 import { TutorialService } from './api/models/tutorial/tutorial.service';
 
@@ -326,8 +326,8 @@ DoubtfireAngularJSModule.directive('userIcon',
   downgradeComponent({ component: UserIconComponent }));
 DoubtfireAngularJSModule.directive('campusList',
   downgradeComponent({ component: CampusListComponent }));
-DoubtfireAngularJSModule.directive('activityList',
-  downgradeComponent({ component: ActivityListComponent }));
+DoubtfireAngularJSModule.directive('activityTypeList',
+  downgradeComponent({ component: ActivityTypeListComponent }));
 DoubtfireAngularJSModule.directive('institutionSettings',
   downgradeComponent({ component: InstitutionSettingsComponent }));
 // Global configuration

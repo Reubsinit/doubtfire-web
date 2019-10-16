@@ -24,6 +24,7 @@ export interface HttpOptions {
 export abstract class EntityService<T extends Entity>  {
 
   abstract entityName: string;
+  abstract serverKey?: string;
 
   /**
    * Provide a string template for the endpoint URLs in the format
@@ -129,12 +130,11 @@ export abstract class EntityService<T extends Entity>  {
   public put<S>(pathIds: Object, options?: HttpOptions): Observable<S>;
   public put<S>(pathIds: any, options?: HttpOptions): Observable<S> {
     let object = { ...pathIds };
-    const json = (typeof pathIds === 'object') ? pathIds.toJson() : pathIds;
+    const json = (typeof pathIds === 'object') ? this.toSnakeCase(pathIds.toJson()) : pathIds;
     const path = this.buildEndpoint(this.endpointFormat, object);
 
     return this.httpClient.put(path, json, options) as Observable<S>;
   }
-
 
   /**
    * Make a create request to the endpoint, using the supplied parameters to determine the path.
@@ -192,5 +192,23 @@ export abstract class EntityService<T extends Entity>  {
    * @returns string containing the unique key value
    */
   public abstract keyForJson(json: any): string;
+
+  /**
+   * Convert an objects keys from camalCase to snake_case. The server accepts entities
+   * on their respective endpoints in snake_case form. Example, when updating an ActivityType,
+   * the server expects the following format `{ activity_type: { key: value } }`. The need arrises for this
+   * when `pathIds.toJson()` is called within the @method put because this returns the data in the following
+   * format `{ activityType: { key: value } }`, where `activityType` is in `camalCase`, which is incompatible with
+   * the server's endpoint requirements.
+   *
+   * @param obj The object for which keys need to be converted to snake_case
+   */
+  private toSnakeCase(obj: Object): Object {
+    let result = {};
+    for (let key of Object.keys(obj)) {
+      result[key.replace(/([A-Z])/g, '_$1').toLowerCase()] = obj[key];
+    }
+    return result;
+  }
 
 }

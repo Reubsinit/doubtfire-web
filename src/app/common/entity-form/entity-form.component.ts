@@ -113,7 +113,9 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
         this.copyChangesFromForm();
         response = service.update(this.selected);
       } else if (!this.selected) { // Nothing selected, which means we're creating something new
-        response = service.create(this.formDataToObject(service.entityName.toLocaleLowerCase(), associations));
+        response = service.create(
+          this.formDataToObject(service.serverKey ? service.serverKey : service.entityName.toLocaleLowerCase(), associations)
+        );
       } else { // Nothing has changed if the selected value, so we want to inform the user
         alertService.add('danger', `${service.entityName} was not changed`, 6000);
         return;
@@ -137,7 +139,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
         error => {
           // Whoops - an error
           // Restore the form data from backup if applicable
-          if (this.selected && this.hasChanges()) {
+          if (this.selected) {
             this.restoreFromBackup();
           }
           alertService.add('danger', `${service.entityName} save failed: ${error}`, 6000);
