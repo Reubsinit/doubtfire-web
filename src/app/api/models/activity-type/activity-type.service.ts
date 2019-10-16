@@ -5,7 +5,6 @@ export class ActivityTypeService extends CacheableEntityService<ActivityType> {
 
   protected readonly endpointFormat = 'activity_types/:id:';
   entityName = 'ActivityType';
-  serverKey = 'activity_type';
 
   protected createInstanceFrom(json: any): ActivityType {
     let activityType = new ActivityType();

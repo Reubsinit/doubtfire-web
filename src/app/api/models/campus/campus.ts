@@ -6,6 +6,7 @@ const KEYS =
     'name',
     'mode',
     'abbreviation',
+    'active'
   ];
 
 type campusModes = 'timetable' | 'automatic' | 'manual';

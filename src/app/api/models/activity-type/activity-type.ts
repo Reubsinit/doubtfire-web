@@ -14,7 +14,7 @@ export class ActivityType extends Entity {
 
   toJson(): any {
     return {
-      activityType: super.toJsonWithKeys(KEYS)
+      activity_type: super.toJsonWithKeys(KEYS)
     };
   }
 
