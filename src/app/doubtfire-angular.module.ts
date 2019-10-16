@@ -1,7 +1,7 @@
 import { NgModule, Injector } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { UpgradeModule } from '@angular/upgrade/static';
-
+import { setAppInjector } from './app-injector';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectModule } from '@angular/material/select';
@@ -92,6 +92,7 @@ import { UnitTutorialsListComponent } from './units/states/edit/directives/unit-
 import { ActivityListComponent } from './admin/states/activities/activity-list/activity-list.component';
 import { InstitutionSettingsComponent } from './units/states/institution-settings/institution-settings.component';
 import { CampusService } from './api/models/campus/campus.service';
+import { TutorialService } from './api/models/tutorial/tutorial.service';
 
 @NgModule({
   // components
@@ -154,6 +155,7 @@ import { CampusService } from './api/models/campus/campus.service';
   providers: [
     UserService,
     CampusService,
+    TutorialService,
     userProvider,
     unitProvider,
     ifRoleProvider,
@@ -182,7 +184,7 @@ import { CampusService } from './api/models/campus/campus.service';
     AboutDoubtfireModalService,
     UserSettingsDialog,
     UserNotificationSettingsModal,
-    DoubtfireConstants
+    DoubtfireConstants,
   ],
   entryComponents: [
     AboutDoubtfireModalContent,
@@ -200,10 +202,12 @@ import { CampusService } from './api/models/campus/campus.service';
 })
 export class DoubtfireAngularModule {
   constructor(
+    injector: Injector,
     private upgrade: UpgradeModule,
     private constants: DoubtfireConstants,
     private title: Title
   ) {
+    setAppInjector(injector);
     setTheme('bs3'); // or 'bs4'
 
     this.constants.ExternalName.subscribe(result => {
