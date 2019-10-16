@@ -5,6 +5,7 @@ import { currentUser, auth, analyticsService } from 'src/app/ajs-upgraded-provid
 import { HttpClient } from '@angular/common/http';
 
 export class UserService extends CacheableEntityService<User> {
+  entityName: string = 'User';
   protected readonly endpointFormat = 'users/:id:';
 
   constructor(httpClient: HttpClient,
