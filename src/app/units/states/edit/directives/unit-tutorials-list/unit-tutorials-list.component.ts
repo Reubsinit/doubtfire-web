@@ -5,7 +5,7 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { Tutorial } from 'src/app/api/models/tutorial/tutorial';
 import { EntityFormComponent } from 'src/app/common/entity-form/entity-form.component';
 import { TutorialService } from 'src/app/api/models/tutorial/tutorial.service';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, ControlValueAccessor } from '@angular/forms';
 import { Campus } from 'src/app/api/models/campus/campus';
 import { CampusService } from 'src/app/api/models/campus/campus.service';
 import { User } from 'src/app/api/models/user/user';
@@ -36,7 +36,7 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
       meeting_day: new FormControl('', [
         Validators.required
       ]),
-      meeting_time: new FormControl('', [
+      meeting_time: new FormControl(null, [
         Validators.required
       ]),
       meeting_location: new FormControl('', [
@@ -45,13 +45,13 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
       abbreviation: new FormControl('', [
         Validators.required
       ]),
-      campus_id: new FormControl('', [
+      campus: new FormControl(null, [
         Validators.required
       ]),
       capacity: new FormControl('', [
         Validators.required
       ]),
-      tutor_id: new FormControl('', [
+      tutor: new FormControl(null, [
         Validators.required
       ]),
     });
@@ -64,6 +64,14 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
       this.campuses.push(...campuses);
     });
     this.tutorials.push(...this.unit.tutorials);
+    this.formDataMapping = {
+      tutor: (data: Object) => {
+        return { tutor_id: data['id'] };
+      },
+      campus: (data: Object) => {
+        return { campus_id: data['id'] };
+      },
+    };
   }
 
   // This method is passed to the submit method on the parent
@@ -86,5 +94,14 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
   // which then calls the parent's submit.
   submit() {
     super.submit(this.tutorialService, this.alerts, this.onSuccess.bind(this), { unit_id: this.unit.id });
+  }
+
+  // This comparison function is required to determine what campus or user
+  // to render in the associated mat-select components when editing a
+  // tutorial. The function is bound to the compareFn attribute on the related
+  // mat-selects.
+  // See: https://angular.io/api/forms/SelectControlValueAccessor
+  compareSelection(aEntity: User | Campus, bTutor: User | Campus) {
+    return aEntity && bTutor ? aEntity.id === bTutor.id : aEntity === bTutor;
   }
 }

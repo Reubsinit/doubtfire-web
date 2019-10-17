@@ -38,8 +38,8 @@
         <ng-template #edit>
           <mat-form-field class="data-entry">
             <mat-label>Campus</mat-label>
-            <mat-select required formControlName="campus_id">
-              <mat-option *ngFor="let campus of campuses" [value]="campus.id">
+            <mat-select required [compareWith]="compareSelection" formControlName="campus">
+              <mat-option *ngFor="let campus of campuses" [value]="campus">
                 {{campus.name }}
               </mat-option>
             </mat-select>
@@ -49,8 +49,8 @@
       <td mat-footer-cell *matFooterCellDef>
         <mat-form-field class="data-entry">
           <mat-label>Campus</mat-label>
-          <mat-select required formControlName="campus_id">
-            <mat-option *ngFor="let campus of campuses" [value]="campus.id">
+          <mat-select required formControlName="campus">
+            <mat-option *ngFor="let campus of campuses" [value]="campus">
               {{campus.name }}
             </mat-option>
           </mat-select>
@@ -101,7 +101,7 @@
           <mat-label>Day</mat-label>
           <mat-select required formControlName="meeting_day">
             <mat-option *ngFor="let day of days" [value]="day">
-              {{day  }}
+              {{ day }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -113,11 +113,12 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Time </th>
       <td mat-cell *matCellDef="let tutorial">
         <div *ngIf="!editing(tutorial) else edit">
-          {{tutorial.meeting_time | date:'HH:mm'}}
+          {{tutorial.meeting_time}}
         </div>
         <ng-template #edit>
           <mat-form-field class="data-entry">
-            <input matInput type="time" required formControlName="meeting_time" placeholder="Time">
+            <input matInput type="time" required formControlName="meeting_time"
+              [value]="formData.get('meeting_time').value" placeholder="Time">
           </mat-form-field>
         </ng-template>
       </td>
@@ -138,8 +139,8 @@
         <ng-template #edit>
           <mat-form-field class="data-entry">
             <mat-label>Tutor</mat-label>
-            <mat-select required formControlName="tutor_id">
-              <mat-option *ngFor="let tutor of unit.staff" [value]="tutor.user_id">
+            <mat-select required [compareWith]="compareSelection" formControlName="tutor">
+              <mat-option *ngFor="let tutor of unit.staff" [value]="tutor">
                 {{ tutor.name }}
               </mat-option>
             </mat-select>
@@ -149,8 +150,8 @@
       <td mat-footer-cell *matFooterCellDef>
         <mat-form-field class="data-entry">
           <mat-label>Tutor</mat-label>
-          <mat-select required formControlName="tutor_id">
-            <mat-option *ngFor="let tutor of unit.staff" [value]="tutor.user_id">
+          <mat-select required formControlName="tutor">
+            <mat-option *ngFor="let tutor of unit.staff" [value]="tutor">
               {{ tutor.name }}
             </mat-option>
           </mat-select>
