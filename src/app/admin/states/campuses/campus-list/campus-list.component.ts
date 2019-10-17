@@ -39,7 +39,7 @@ export class CampusListComponent extends EntityFormComponent<Campus> {
       mode: new FormControl('', [
         Validators.required
       ]),
-      active: new FormControl('')
+      active: new FormControl(false)
     });
   }
 
