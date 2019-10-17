@@ -62,11 +62,11 @@ export abstract class Entity {
    *              specific values from the json where a straight data copy is not
    *              appropriate/possible.
    */
-  protected setFromJson(data: any, keys: string[], maps?: Object): void {
+  protected setFromJson(data: any, keys: string[], ignoredKeys?: string[], maps?: Object): void {
     keys.forEach(key => {
       if (maps && maps[key]) {
         this[key] = maps[key](data[key]);
-      } else {
+      } else if (ignoredKeys && ignoredKeys.indexOf(key) < 0 || !ignoredKeys) {
         this[key] = data[key];
       }
     });

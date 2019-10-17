@@ -20,30 +20,28 @@ const KEYS =
     'tutor',
   ];
 
+const IGNORE = [
+  'campus_id',
+  'tutor_name',
+  'tutor_id'
+];
+
 export class Tutorial extends Entity {
 
   id: number;
   meeting_day: string;
-  meeting_time: Date;
+  meeting_time: string;
   abbreviation: string;
   campus: Campus;
   capacity: number;
-  tutor_name: string;
   num_students: number;
   tutor: User;
-
-  constructor(initialData?: any) {
-    super();
-    if (initialData) {
-      this.updateFromJson(initialData);
-    }
-  }
 
   toJson(): any {
     return {
       tutorial: super.toJsonWithKeys(KEYS, {
         tutor_id: (data: Object) => {
-          return data['tutor']['user_id'];
+          return data['tutor']['id'];
         },
         campus_id: (data: Object) => {
           return data['campus']['id'];
@@ -52,8 +50,8 @@ export class Tutorial extends Entity {
     };
   }
 
-  setFromJson(data: any, keys: string[], maps?: Object): void {
-    super.setFromJson(data, keys, maps);
+  setFromJson(data: any, keys: string[], ignoredKeys?: string[], maps?: Object): void {
+    super.setFromJson(data, keys, ignoredKeys, maps);
     if (data.campus_id) {
       AppInjector.get(CampusService).get(data.campus_id).subscribe(campus => {
         this.campus = campus;
@@ -75,8 +73,12 @@ export class Tutorial extends Entity {
       };
       return result;
     };
-    this.setFromJson(data, KEYS, {
-      tutor: mappingFunction('id', AppInjector.get(UserService))
+    this.setFromJson(data, KEYS, IGNORE, {
+      tutor: mappingFunction('id', AppInjector.get(UserService)),
+      meeting_time: (dateString: string) => {
+        const time = new Date(dateString).toLocaleTimeString();
+        return time.slice(0, time.lastIndexOf(':'));
+      }
     });
   }
 

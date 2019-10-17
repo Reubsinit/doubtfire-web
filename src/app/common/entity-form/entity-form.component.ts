@@ -27,6 +27,8 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
   // to restore the appropriate data.
   backup = {};
 
+  formDataMapping = {};
+
   /**
    * Create a new instance of EntityFormComponent.
    *
@@ -207,7 +209,11 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
     let result = {};
     result[endPointKey] = {};
     for (const key of Object.keys(this.formData.controls)) {
-      result[endPointKey][key] = this.formData.get(`${key}`).value;
+      if (!this.formDataMapping[key]) {
+        result[endPointKey][key] = this.formData.get(`${key}`).value;
+      } else {
+        Object.assign(result[endPointKey], this.formDataMapping[key](this.formData.get(`${key}`).value));
+      }
     }
     if (associations) {
       for (const key of Object.keys(associations)) {
