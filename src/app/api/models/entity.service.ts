@@ -24,6 +24,9 @@ export interface HttpOptions {
 export abstract class EntityService<T extends Entity>  {
 
   abstract entityName: string;
+  get serverKey(): string {
+    return this.entityName.replace(/(.)([A-Z][a-z]+)/, '$1_$2').replace(/([a-z0-9])([A-Z])/, '$1_$2').toLowerCase();
+  }
 
   /**
    * Provide a string template for the endpoint URLs in the format

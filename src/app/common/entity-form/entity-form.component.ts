@@ -114,7 +114,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
         response = service.update(this.selected);
       } else if (!this.selected) { // Nothing selected, which means we're creating something new
         response = service.create(
-          this.formDataToObject(service.serverKey ? service.serverKey : service.entityName.toLocaleLowerCase(), associations)
+          this.formDataToObject(service.serverKey, associations)
         );
       } else { // Nothing has changed if the selected value, so we want to inform the user
         alertService.add('danger', `${service.entityName} was not changed`, 6000);
@@ -203,15 +203,15 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    *
    * @returns object representation of form data.
    */
-  formDataToObject(entityName: string, associations?: Object): Object {
+  formDataToObject(endPointKey: string, associations?: Object): Object {
     let result = {};
-    result[entityName] = {};
+    result[endPointKey] = {};
     for (const key of Object.keys(this.formData.controls)) {
-      result[entityName][key] = this.formData.get(`${key}`).value;
+      result[endPointKey][key] = this.formData.get(`${key}`).value;
     }
     if (associations) {
       for (const key of Object.keys(associations)) {
-        result[entityName][key] = associations[key];
+        result[endPointKey][key] = associations[key];
       }
     }
     return result;
