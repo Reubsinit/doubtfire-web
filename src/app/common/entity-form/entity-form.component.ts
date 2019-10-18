@@ -27,6 +27,15 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
   // to restore the appropriate data.
   backup = {};
 
+  // serves as a mapped set of functions that may be required to perform
+  // some kind of data manipulation on the data contained within the form
+  // before being sent off to the serve. For instance, unit-tutorials-list.component
+  // is designed to create and edit Tutorials, where a tutorial has exaclty one Tutor (object)
+  // and one Campus (object). When sending a Tutorial to the server, it expects not to recieve those
+  // particular entities as objects, but rather their unique ids that denote those instances.
+  // Before a Tutorial is sent to the server, a tutorial's tutor needs to be mapped as { tutor_id: x }
+  // and the same with campus as { campus_id: y }.
+  // See unit-tutorials-list.component
   formDataMapping = {};
 
   /**
@@ -93,6 +102,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    * @param service the entity service used to perform CRUD for the entity.
    * @param alertService the alert service used to provide alerts.
    * @param success the function, provided by inheritor, that is executed on success of CRUD methods.
+   * @param associations any relational entity keys that need to be provided.
    */
   submit(service: EntityService<T>, alertService: any, success: OnSuccessMethod<T>, associations?: Object) {
     // response is what we get back from the server
@@ -202,6 +212,9 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    * Get the values within the form's FormControls as an object. This
    * prepares the form's inputs to be sent off to the server in order to
    * create a new entity.
+   *
+   * @param endPointKey identifies the type of data the server will recieve.
+   * @param associations any relational entity keys that need to be provided.
    *
    * @returns object representation of form data.
    */

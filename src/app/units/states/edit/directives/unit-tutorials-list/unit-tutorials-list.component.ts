@@ -64,6 +64,11 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
       this.campuses.push(...campuses);
     });
     this.tutorials.push(...this.unit.tutorials);
+    // Here we have some mapping functions
+    // that define how we send a Tutorial's
+    // Tutor and Campus. For example, for Tutor
+    // we only need to send the Tutor's id denoted
+    // by the key tutor_id
     this.formDataMapping = {
       tutor: (data: Object) => {
         return { tutor_id: data['id'] };
