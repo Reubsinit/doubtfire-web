@@ -11,6 +11,7 @@ const KEYS =
     'meeting_day',
     'meeting_time',
     'meeting_location',
+    'description',
     'abbreviation',
     'campus_id',
     'capacity',
@@ -63,7 +64,7 @@ export class Tutorial extends Entity {
     const mappingFunction = (key: string, service: any) => {
       let result: TypeMapFunction;
       result = (json: any) => {
-        if (json[key]) {
+        if (json && json[key]) {
           let resource;
           service.get(json[key]).subscribe(response => {
             resource = response;
