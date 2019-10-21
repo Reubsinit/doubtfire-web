@@ -16,7 +16,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
   public update(pathIds: Object, options?: HttpOptions): Observable<T>;
   public update(pathIds: any, options?: HttpOptions): Observable<T> {
     return super.update(pathIds, options).pipe(
-      tap(updatedEntity => this.cache.set(updatedEntity.key, updatedEntity))
+      tap(updatedEntity => this.addEntityToCache(updatedEntity.key, updatedEntity))
     );
   }
   /**
@@ -31,7 +31,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
     return super.query(pathIds, options).pipe(
       tap(entityList => {
         entityList.forEach(entity => {
-          this.cache.set(entity.key, entity);
+          this.addEntityToCache(entity.key, entity);
         });
       }));
   }
@@ -64,7 +64,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
           Object.assign(cachedEntity, entity);
           return cachedEntity;
         } else {
-          this.cache.set(key, entity);
+          this.addEntityToCache(key, entity);
           return entity;
         }
       })
@@ -79,6 +79,17 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
    */
   public hasEntityInCache(key: string): boolean {
     return this.cache.has(key);
+  }
+
+  /**
+   * Store an entity in the cache - this will automatically be called on
+   * query and get, but can be called directly in special cases.
+   *
+   * @param key key of the entity to store
+   * @param entity the entity object to store in the cache
+   */
+  public addEntityToCache(key: string, entity: T) {
+    this.cache.set(key, entity);
   }
 
   /**
@@ -115,7 +126,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
       return Observable.create((observer: any) => observer.next(this.getFromCache(key)));
     } else {
       return super.get(pathIds, options).pipe(
-        tap((entity: T) => this.cache.set(entity.key, entity))
+        tap((entity: T) => this.addEntityToCache(entity.key, entity))
       );
     }
   }
@@ -130,7 +141,7 @@ export abstract class CacheableEntityService<T extends Entity> extends EntitySer
    */
   public create(pathIds?: Object, options?: HttpOptions): Observable<T> {
     return super.create(pathIds, options).pipe(
-      tap(entity => this.cache.set(entity.key, entity))
+      tap(entity => this.addEntityToCache(entity.key, entity))
     );
   }
 
