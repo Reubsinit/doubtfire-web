@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { ActivityType } from 'src/app/api/models/activity-type/activity-type';
 import { ActivityTypeService } from 'src/app/api/models/activity-type/activity-type.service';
@@ -6,11 +6,6 @@ import { alertService } from 'src/app/ajs-upgraded-providers';
 import { EntityFormComponent } from 'src/app/common/entity-form/entity-form.component';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
-
-let ELEMENT_DATA = [
-  { id: 1, abbreviation: 'Tut', name: 'Tutorial' },
-  { id: 2, abbreviation: 'Wksp', name: 'Workshop' }
-];
 
 @Component({
   selector: 'activity-type-list',
