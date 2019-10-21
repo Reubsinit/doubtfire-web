@@ -102,9 +102,8 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    * @param service the entity service used to perform CRUD for the entity.
    * @param alertService the alert service used to provide alerts.
    * @param success the function, provided by inheritor, that is executed on success of CRUD methods.
-   * @param associations any relational entity keys that need to be provided.
    */
-  submit(service: EntityService<T>, alertService: any, success: OnSuccessMethod<T>, associations?: Object) {
+  submit(service: EntityService<T>, alertService: any, success: OnSuccessMethod<T>) {
     // response is what we get back from the server
     // when creating or updating
     let response: Observable<T>;
@@ -126,7 +125,7 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
         response = service.update(this.selected);
       } else if (!this.selected) { // Nothing selected, which means we're creating something new
         response = service.create(
-          this.formDataToObject(service.serverKey, associations)
+          this.formDataToNewObject(service.serverKey)
         );
       } else { // Nothing has changed if the selected value, so we want to inform the user
         alertService.add('danger', `${service.entityName} was not changed`, 6000);
@@ -214,24 +213,14 @@ export class EntityFormComponent<T extends Entity> implements OnInit {
    * create a new entity.
    *
    * @param endPointKey identifies the type of data the server will recieve.
-   * @param associations any relational entity keys that need to be provided.
    *
    * @returns object representation of form data.
    */
-  formDataToObject(endPointKey: string, associations?: Object): Object {
+  protected formDataToNewObject(endPointKey: string): Object {
     let result = {};
     result[endPointKey] = {};
     for (const key of Object.keys(this.formData.controls)) {
-      if (!this.formDataMapping[key]) {
-        result[endPointKey][key] = this.formData.get(`${key}`).value;
-      } else {
-        Object.assign(result[endPointKey], this.formDataMapping[key](this.formData.get(`${key}`).value));
-      }
-    }
-    if (associations) {
-      for (const key of Object.keys(associations)) {
-        result[endPointKey][key] = associations[key];
-      }
+      result[endPointKey][key] = this.formData.get(`${key}`).value;
     }
     return result;
   }
