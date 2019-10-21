@@ -111,13 +111,14 @@ export abstract class EntityService<T extends Entity>  {
   /**
    * Make an update request to the endpoint, using the supplied object to identify which id to update.
    *
-   * @param pathIds An object with keys which match the placeholders within the endpointFormat string.
+   * @param obj An object with keys which match the placeholders within the endpointFormat string.
    * @param options Optional http options
    */
-  public update(pathIds: Object, options?: HttpOptions): Observable<T>;
-  public update(pathIds: any, options?: HttpOptions): Observable<T> {
-    return this.put<Object>(pathIds, options).pipe(
-      map(rawData => this.createInstanceFrom(rawData))
+  public update(obj: T, options?: HttpOptions): Observable<T> {
+    return this.put<Object>(obj, options).pipe(
+      map(rawData => {
+        obj.updateFromJson(rawData); return obj;
+      })
     );
   }
 
@@ -148,6 +149,7 @@ export abstract class EntityService<T extends Entity>  {
   public create(pathIds?: Object, options?: HttpOptions): Observable<T>;
   public create(pathIds?: any, options?: HttpOptions): Observable<T> {
     let object = { ...pathIds };
+    debugger;
     const json = (typeof pathIds.toJson === 'function') ? pathIds.toJson() : pathIds;
     const path = this.buildEndpoint(this.endpointFormat, object);
     return this.httpClient.post(path, json, options)
