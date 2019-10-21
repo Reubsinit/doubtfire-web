@@ -5,7 +5,7 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { Tutorial } from 'src/app/api/models/tutorial/tutorial';
 import { EntityFormComponent } from 'src/app/common/entity-form/entity-form.component';
 import { TutorialService } from 'src/app/api/models/tutorial/tutorial.service';
-import { FormControl, Validators, ControlValueAccessor } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Campus } from 'src/app/api/models/campus/campus';
 import { CampusService } from 'src/app/api/models/campus/campus.service';
 import { User } from 'src/app/api/models/user/user';
@@ -64,19 +64,6 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
       this.campuses.push(...campuses);
     });
     this.tutorials.push(...this.unit.tutorials);
-    // Here we have some mapping functions
-    // that define how we send a Tutorial's
-    // Tutor and Campus. For example, for Tutor
-    // we only need to send the Tutor's id denoted
-    // by the key tutor_id
-    this.formDataMapping = {
-      tutor: (data: Object) => {
-        return { tutor_id: data['id'] };
-      },
-      campus: (data: Object) => {
-        return { campus_id: data['id'] };
-      },
-    };
   }
 
   // This method is passed to the submit method on the parent
@@ -98,7 +85,12 @@ export class UnitTutorialsListComponent extends EntityFormComponent<Tutorial> {
   // This method is called when the form is submitted,
   // which then calls the parent's submit.
   submit() {
-    super.submit(this.tutorialService, this.alerts, this.onSuccess.bind(this), { unit_id: this.unit.id });
+    super.submit(this.tutorialService, this.alerts, this.onSuccess.bind(this));
+  }
+
+  protected formDataToNewObject(endPointKey: string, associations?: Object): Object {
+    let result = super.formDataToNewObject(endPointKey);
+    return Tutorial.mapToCreateJson(this.unit, result);
   }
 
   // This comparison function is required to determine what campus or user
