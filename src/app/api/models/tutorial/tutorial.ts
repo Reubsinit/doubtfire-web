@@ -1,17 +1,16 @@
-import { Entity, TypeMapFunction } from '../entity';
+import { Entity } from '../entity';
 import { User } from '../user/user';
 import { UserService } from '../user/user.service';
 import { AppInjector } from '../../../app-injector';
 import { Campus } from '../campus/campus';
 import { CampusService } from '../campus/campus.service';
 
-const KEYS =
+const READ_KEYS =
   [
     'id',
     'meeting_day',
     'meeting_time',
     'meeting_location',
-    'description',
     'abbreviation',
     'campus_id',
     'capacity',
@@ -19,6 +18,19 @@ const KEYS =
     'tutor_id',
     'num_students',
     'tutor',
+  ];
+
+const UPDATE_KEYS =
+  [
+    'id',
+    'meeting_day',
+    'meeting_time',
+    'meeting_location',
+    'abbreviation',
+    'campus_id',
+    'capacity',
+    'tutor_id',
+    'unit_id',
   ];
 
 const IGNORE = [
@@ -32,17 +44,42 @@ export class Tutorial extends Entity {
   id: number;
   meeting_day: string;
   meeting_time: string;
+  meeting_location: string;
   abbreviation: string;
   campus: Campus;
   capacity: number;
   num_students: number;
   tutor: User;
+  // unit: Unit;
+
+  description: string;
+
+  /**
+   * Map the passed in data to a json object on create for a tutorial.
+   *
+   * @param data The data to map to json to create a tutorial
+   */
+  public static mapToCreateJson(unit: Object, data: Object) {
+    let result = { tutorial: {} };
+    for (const key of UPDATE_KEYS) {
+      if (key === 'tutor_id') {
+        result['tutorial']['tutor_id'] = data['tutorial']['tutor']['user_id'];
+      } else if (key === 'campus_id') {
+        result['tutorial']['campus_id'] = data['tutorial']['campus']['id'];
+      } else {
+        result['tutorial'][key] = data['tutorial'][key];
+      }
+    }
+    result['tutorial']['unit_id'] = unit['id'];
+
+    return result;
+  }
 
   toJson(): any {
     return {
-      tutorial: super.toJsonWithKeys(KEYS, {
+      tutorial: super.toJsonWithKeys(UPDATE_KEYS, {
         tutor_id: (data: Object) => {
-          return data['tutor']['id'];
+          return data['tutor']['user_id'] ? data['tutor']['user_id'] : data['tutor']['id'];
         },
         campus_id: (data: Object) => {
           return data['campus']['id'];
@@ -58,24 +95,20 @@ export class Tutorial extends Entity {
         this.campus = campus;
       });
     }
+    if (data.tutor) {
+      const userService = AppInjector.get(UserService);
+      let t = userService.getFromCache(data.tutor.id);
+      if (!t) {
+        t = new User(data.tutor);
+        userService.addEntityToCache(data.tutor.id, t);
+      }
+      this.tutor = t;
+    }
+    this.description = ` ${this.meeting_day.slice(0, 3)} at ${this.meeting_time} by ${data.tutor_name} in ${this.meeting_location}`;
   }
 
   public updateFromJson(data: any): void {
-    const mappingFunction = (key: string, service: any) => {
-      let result: TypeMapFunction;
-      result = (json: any) => {
-        if (json && json[key]) {
-          let resource;
-          service.get(json[key]).subscribe(response => {
-            resource = response;
-          });
-          return resource;
-        }
-      };
-      return result;
-    };
-    this.setFromJson(data, KEYS, IGNORE, {
-      tutor: mappingFunction('id', AppInjector.get(UserService)),
+    this.setFromJson(data, READ_KEYS, IGNORE, {
       meeting_time: (dateString: string) => {
         const time = new Date(dateString).toLocaleTimeString();
         return time.slice(0, time.lastIndexOf(':'));
