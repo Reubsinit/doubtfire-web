@@ -277,6 +277,9 @@ import { DoubtfireConstants } from 'src/app/config/constants/doubtfire-constants
 import { IntelligentDiscussionPlayerComponent } from './tasks/task-comments-viewer/intelligent-discussion-player/intelligent-discussion-player.component';
 import { ExtensionCommentComponent } from './tasks/task-comments-viewer/extension-comment/extension-comment.component';
 import { ExtensionModalService } from './common/modals/extension-modal/extension-modal.service';
+import { ActivityTypeListComponent } from './admin/states/activity-types/activity-type-list/activity-type-list.component';
+import { InstitutionSettingsComponent } from './units/states/institution-settings/institution-settings.component';
+import { CampusListComponent } from './admin/states/campuses/campus-list/campus-list.component';
 
 export const DoubtfireAngularJSModule = angular.module('doubtfire', [
   'doubtfire.config',
@@ -308,6 +311,12 @@ DoubtfireAngularJSModule.directive('intelligentDiscussionPlayer',
   downgradeComponent({ component: IntelligentDiscussionPlayerComponent }));
 DoubtfireAngularJSModule.directive('extensionComment',
   downgradeComponent({ component: ExtensionCommentComponent }));
+DoubtfireAngularJSModule.directive('activityTypeList',
+  downgradeComponent({ component: ActivityTypeListComponent }));
+DoubtfireAngularJSModule.directive('institutionSettings',
+  downgradeComponent({ component: InstitutionSettingsComponent }));
+DoubtfireAngularJSModule.directive('campusList',
+  downgradeComponent({ component: CampusListComponent }));
 
 // Global configuration
 
