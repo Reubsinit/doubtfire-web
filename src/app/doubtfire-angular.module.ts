@@ -71,6 +71,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ExtensionCommentComponent } from './tasks/task-comments-viewer/extension-comment/extension-comment.component';
 import { CampusListComponent } from './admin/states/campuses/campus-list/campus-list.component';
 import { ExtensionModalComponent } from './common/modals/extension-modal/extension-modal.component';
+import { UserSettingsDialogContent, UserSettingsDialog } from './admin/modals/user-settings-dialog/user-settings-dialog.component';
 
 import 'hammerjs';
 import { MatRadioModule } from '@angular/material/radio';
@@ -108,7 +109,8 @@ import { UserService } from './api/models/user/user.service';
     ExtensionModalComponent,
     InstitutionSettingsComponent,
     UnitTutorialsListComponent,
-    UnitTutorialsManagerComponent
+    UnitTutorialsManagerComponent,
+    UserSettingsDialogContent,
   ],
   // Module Imports
   imports: [
@@ -157,7 +159,6 @@ import { UserService } from './api/models/user/user.service';
     authProvider,
     currentUserProvider,
     taskServiceProvider,
-    currentUserProvider,
     analyticsServiceProvider,
     taskProvider,
     alertServiceProvider,
@@ -177,10 +178,12 @@ import { UserService } from './api/models/user/user.service';
     },
     AboutDoubtfireModal,
     AboutDoubtfireModalService,
+    UserSettingsDialog,
     DoubtfireConstants
   ],
   entryComponents: [
     AboutDoubtfireModalContent,
+    UserSettingsDialogContent,
     TaskCommentComposerComponent,
     IntelligentDiscussionPlayerComponent,
     ExtensionCommentComponent,

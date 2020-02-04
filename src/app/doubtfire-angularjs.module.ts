@@ -117,7 +117,6 @@ import 'build/src/app/admin/modals/teaching-period-settings-modal/teaching-perio
 import 'build/src/app/admin/modals/create-break-modal/create-break-modal.js';
 import 'build/src/app/admin/modals/rollover-teaching-period-modal/rollover-teaching-period-modal.js';
 import 'build/src/app/admin/modals/user-notification-settings-modal/user-notification-settings-modal.js';
-import 'build/src/app/admin/modals/user-settings-modal/user-settings-modal.js';
 import 'build/src/app/admin/modals/modals.js';
 import 'build/src/app/admin/modals/create-unit-modal/create-unit-modal.js';
 import 'build/src/app/admin/states/states.js';
@@ -284,6 +283,7 @@ import { UnitTutorialsListComponent } from './units/states/edit/directives/unit-
 import { UnitTutorialsManagerComponent } from './units/states/edit/directives/unit-tutorials-manager/unit-tutorials-manager.component';
 import { TutorialService } from './api/models/tutorial/tutorial.service';
 import { TutorialStreamService } from './api/models/tutorial-stream/tutorial-stream.service';
+import { UserSettingsDialog } from './admin/modals/user-settings-dialog/user-settings-dialog.component';
 
 export const DoubtfireAngularJSModule = angular.module('doubtfire', [
   'doubtfire.config',
@@ -303,6 +303,8 @@ export const DoubtfireAngularJSModule = angular.module('doubtfire', [
 // factory -> service
 DoubtfireAngularJSModule.factory('AboutDoubtfireModal',
   downgradeInjectable(AboutDoubtfireModal));
+DoubtfireAngularJSModule.factory('UserSettingsDialog',
+  downgradeInjectable(UserSettingsDialog));
 DoubtfireAngularJSModule.factory('DoubtfireConstants',
   downgradeInjectable(DoubtfireConstants));
 DoubtfireAngularJSModule.factory('ExtensionModal',
