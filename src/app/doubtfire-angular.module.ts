@@ -72,6 +72,7 @@ import { ExtensionCommentComponent } from './tasks/task-comments-viewer/extensio
 import { CampusListComponent } from './admin/states/campuses/campus-list/campus-list.component';
 import { ExtensionModalComponent } from './common/modals/extension-modal/extension-modal.component';
 import { UserSettingsDialogContent, UserSettingsDialog } from './admin/modals/user-settings-dialog/user-settings-dialog.component';
+import { UserIconComponent } from './common/user-icon/user-icon.component';
 
 import 'hammerjs';
 import { MatRadioModule } from '@angular/material/radio';
@@ -111,6 +112,7 @@ import { UserService } from './api/models/user/user.service';
     UnitTutorialsListComponent,
     UnitTutorialsManagerComponent,
     UserSettingsDialogContent,
+    UserIconComponent
   ],
   // Module Imports
   imports: [
@@ -190,7 +192,8 @@ import { UserService } from './api/models/user/user.service';
     IntelligentDiscussionDialog,
     DiscussionComposerDialog,
     ExtensionModalComponent,
-    UnitTutorialsManagerComponent
+    UnitTutorialsManagerComponent,
+    UserIconComponent
   ]
 })
 export class DoubtfireAngularModule {

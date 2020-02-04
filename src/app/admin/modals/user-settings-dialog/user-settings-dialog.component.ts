@@ -1,6 +1,6 @@
 import { Component, Inject, Injectable } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { analyticsService, auth, currentUser, alertService, userIcon, UserIconProvider } from 'src/app/ajs-upgraded-providers';
+import { analyticsService, auth, currentUser, alertService } from 'src/app/ajs-upgraded-providers';
 import { DoubtfireConstants } from 'src/app/config/constants/doubtfire-constants';
 import { UserService } from 'src/app/api/models/user/user.service';
 import { User } from 'src/app/api/models/user/user';

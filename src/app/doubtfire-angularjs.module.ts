@@ -25,7 +25,6 @@ import 'node_modules/angular-ui-codemirror/src/ui-codemirror.js';
 import 'node_modules/angular-markdown-filter/markdown.js';
 import 'node_modules/angulartics/dist/angulartics.min.js';
 import 'node_modules/angulartics-google-analytics/lib/angulartics-google-analytics.js';
-import 'node_modules/angular-md5/angular-md5.js';
 
 // Ok... here is what we need to convert!
 
@@ -199,7 +198,6 @@ import 'build/src/app/common/pdf-viewer/pdf-viewer.js';
 import 'build/src/app/common/status-icon/status-icon.js';
 import 'build/src/app/common/file-uploader/file-uploader.js';
 import 'build/src/app/common/common.js';
-import 'build/src/app/common/user-icon/user-icon.js';
 import 'build/src/app/common/header/header.js';
 import 'build/src/app/common/header/unit-dropdown/unit-dropdown.js';
 import 'build/src/app/common/services/task-service.js';
@@ -284,6 +282,7 @@ import { UnitTutorialsManagerComponent } from './units/states/edit/directives/un
 import { TutorialService } from './api/models/tutorial/tutorial.service';
 import { TutorialStreamService } from './api/models/tutorial-stream/tutorial-stream.service';
 import { UserSettingsDialog } from './admin/modals/user-settings-dialog/user-settings-dialog.component';
+import { UserIconComponent } from './common/user-icon/user-icon.component';
 
 export const DoubtfireAngularJSModule = angular.module('doubtfire', [
   'doubtfire.config',
@@ -331,6 +330,8 @@ DoubtfireAngularJSModule.directive('unitTutorialsList',
     downgradeComponent({ component: UnitTutorialsListComponent }));
 DoubtfireAngularJSModule.directive('unitTutorialsManager',
     downgradeComponent({ component: UnitTutorialsManagerComponent }));
+DoubtfireAngularJSModule.directive('userIcon',
+    downgradeComponent({ component: UserIconComponent }));
   // Global configuration
 
 // If the user enters a URL that doesn't match any known URL (state), send them to `/home`
