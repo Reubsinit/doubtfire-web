@@ -27,21 +27,20 @@ export class UserSettingsDialogContent {
   ) { }
 
   private createNewUser() {
-    // this.user.create(this.data.user).subscribe(
-    //   result => {
-    //     this.alerts.add('success', `Created ${result.first_name} ${result.last_name} successfully`, 2000);
-    //     this.user.query().subscribe(
-    //       users => users.push(result));
-    //   },
-    //   error => this.alerts.add('danger', `Error creating user. ${(error != null ? error : undefined)}`, 2000));
+    this.user.create({user: this.data.user}).subscribe(
+      result => {
+        this.alerts.add('success', `Created ${result.first_name} ${result.last_name} successfully`, 2000);
+        this.user.query().subscribe(
+          users => users.push(result));
+      },
+      error => this.alerts.add('danger', `Error creating user. ${(error != null ? error : undefined)}`, 2000));
   }
 
   private updateExistingUser() {
     this.user.update(this.data.user).subscribe(
       result => {
         this.alerts.add('success', `Updated ${result.first_name} ${result.last_name} successfully`, 2000);
-        this.data.user.name = `${this.data.user.first_name} ${this.data.user.last_name}`;
-        if (this.data.user === this.data.currentUser.profile) {
+        if (this.data.user.id === this.data.currentUser.profile.id) {
           this.auth.saveCurrentUser();
           if (this.data.user.opt_in_to_research) {
             this.analyticsService.event('Doubtfire Analytics', 'User opted in research');
@@ -73,7 +72,7 @@ export class UserSettingsDialog {
   }
 
   show(user: User) {
-    this.userSettingsDialogData.user = user;
+    this.userSettingsDialogData.user.updateFromJson(user);
     this.userSettingsDialogData.isNew = !user.id;
     this.getExternalName();
     this.dialog.open(UserSettingsDialogContent,
